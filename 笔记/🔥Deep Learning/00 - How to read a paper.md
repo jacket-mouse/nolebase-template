@@ -1,4 +1,4 @@
-# 00 - How to read a paper
+# How to read a paper
 
 多个文献对比阅读：
 1. 平均读每个文献的时间
