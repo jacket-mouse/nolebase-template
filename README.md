@@ -4,7 +4,7 @@
 
 本仓库从[nolebase](https://github.com/nolebase/nolebase/) 精简而来，方便做 template，用于初始化仓库
 
-演示网站： [https://nolebase-template.vercel.app](https://nolebase-template-seven.vercel.app/)
+演示网站： [https://nolebase-template-seven.vercel.app](https://nolebase-template-seven.vercel.app/)
 
 做了如下改动
 - 精简仓库: 删除了原始的笔记，较大的文件，思源宋体文件， `.obsidian/`文件夹, `netlify`文件夹
