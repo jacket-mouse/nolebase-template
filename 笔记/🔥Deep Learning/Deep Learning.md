@@ -7,10 +7,12 @@
 > 概率是通过已知的条件，推测事件发生的可能性；似然则相反，是基于已经确定的结果反推产生这个结果的可能性。
 
 $$
+\begin{align}
 \theta：环境对应的参数 \\
 x：事件发生的结果 \\
 概率：P(x|\theta) \quad P是关于x的函数\\
 似然：L(\theta|x) \quad L是关于\theta的函数
+\end{align}
 $$
 
 极大（最大）似然估计：通过已知结果推测最大概率导致这些样本结果出现的模型参数。
@@ -89,11 +91,13 @@ $$
 > 函数$f(\mathbf{x}) = \|\mathbf{x}\|_2$​的梯度是什么？
 
 $$
+\begin{align}
 ||x||_2 = \sqrt{\sum_{i=1}^{n}x_i^2} \\
 =\sqrt{x_1^2 + x_2^2……+x_n^2} \\
 D(||x||_2)= \frac{1}{2\sqrt{\sum_{i=1}^{n}x_i^2}}D(\sum_{i=1}^{n}x_i^2) \\
 = \frac{x_i}{\sqrt{\sum_{i=1}^{n}x_i^2}} \\
 \nabla_x||x||_2 = [\frac{x_1}{\sqrt{\sum_{i=1}^{n}x_i^2}}……\frac{x_n}{\sqrt{\sum_{i=1}^{n}x_i^2}}]
+\end{align}
 $$
 
 > 尝试写出函数$u = f(x, y, z)$，其中$x = x(a, b)$，$y = y(a, b)$，$z = z(a, b)$的链式法则。
