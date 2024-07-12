@@ -1,3 +1,5 @@
+# Version Control (Git)
+
 Version control systems (VCSs) are tools used to track changes to source code (or other collections of files and folders). As the name implies, these tools help maintain a history of changes; furthermore, they facilitate collaboration. VCSs track changes to a folder and its contents in a series of snapshots, where each snapshot encapsulates the entire state of files/folders within a top-level directory. VCSs also maintain metadata like who created each snapshot, messages associated with each snapshot, and so on.
 
 Why is version control useful? Even when you’re working by yourself, it can let you look at old snapshots of a project, keep a log of why certain changes were made, work on parallel branches of development, and much more. When working with others, it’s an invaluable tool for seeing what other people have changed, as well as resolving conflicts in concurrent development.
@@ -16,11 +18,11 @@ Because Git’s interface is a leaky abstraction, learning Git top-down (startin
 
 While Git admittedly has an ugly interface, its underlying design and ideas are beautiful. While an ugly interface has to be _memorized_, a beautiful design can be _understood_. For this reason, we give a bottom-up explanation of Git, starting with its data model and later covering the command-line interface. Once the data model is understood, the commands can be better understood in terms of how they manipulate the underlying data model.
 
-# Git’s data model
+## Git’s data model
 
 There are many ad-hoc approaches you could take to version control. Git has a well-thought-out model that enables all the nice features of version control, like maintaining history, supporting branches, and enabling collaboration.
 
-## Snapshots
+### Snapshots
 
 Git models the history of a collection of files and folders within some top-level directory as a series of snapshots. In Git terminology, a file is called a “blob”, and it’s just a bunch of bytes. A directory is called a “tree”, and it maps names to blobs or trees (so directories can contain other directories). A snapshot is the top-level tree that is being tracked. For example, we might have a tree as follows:
 
@@ -36,7 +38,7 @@ Git models the history of a collection of files and folders within some top-leve
 
 The top-level tree contains two elements, a tree “foo” (that itself contains one element, a blob “bar.txt”), and a blob “baz.txt”.
 
-## Modeling history: relating snapshots
+### Modeling history: relating snapshots
 
 How should a version control system relate snapshots? One simple model would be to have a linear history. A history would be a list of snapshots in time-order. For many reasons, Git doesn’t use a simple model like this.
 
@@ -63,7 +65,7 @@ o <-- o <-- o <-- o <---- o
 
 Commits in Git are immutable. This doesn’t mean that mistakes can’t be corrected, however; it’s just that “edits” to the commit history are actually creating entirely new commits, and references (see below) are updated to point to the new ones.
 
-## Data model, as pseudocode
+### Data model, as pseudocode
 
 It may be instructive to see Git’s data model written down in pseudocode:
 
@@ -85,7 +87,7 @@ type commit = struct {
 
 It’s a clean, simple model of history.
 
-## Objects and content-addressing
+### Objects and content-addressing
 
 An “object” is a blob, tree, or commit:
 
@@ -108,7 +110,7 @@ def load(id):
 
 Blobs, trees, and commits are unified in this way: they are all objects. When they reference other objects, they don’t actually _contain_ them in their on-disk representation, but have a reference to them by their hash.
 
-For example, the tree for the example directory structure [above](https://missing.csail.mit.edu/2020/version-control/#snapshots) (visualized using `git cat-file -p 698281bc680d1995c5f4caaf3359721a5a58d48d`), looks like this:
+For example, the tree for the example directory structure [above](https://missing.csail.mit.edu/2020/version-control/##snapshots) (visualized using `git cat-file -p 698281bc680d1995c5f4caaf3359721a5a58d48d`), looks like this:
 
 ```
 100644 blob 4448adbf7ecd394f42ae135bbeed9676e894af85    baz.txt
@@ -121,7 +123,7 @@ The tree itself contains pointers to its contents, `baz.txt` (a blob) and `fo
 git is wonderful
 ```
 
-## References
+### References
 
 Now, all snapshots can be identified by their SHA-1 hashes. That’s inconvenient, because humans aren’t good at remembering strings of 40 hexadecimal characters.
 
@@ -147,7 +149,7 @@ With this, Git can use human-readable names like “master” to refer to a part
 
 One detail is that we often want a notion of “where we currently are” in the history, so that when we take a new snapshot, we know what it is relative to (how we set the `parents` field of the commit). In Git, that “where we currently are” is a special reference called “HEAD”.
 
-## Repositories
+### Repositories
 
 Finally, we can define what (roughly) is a Git _repository_: it is the data `objects` and `references`.
 
@@ -155,7 +157,7 @@ On disk, all Git stores are objects and references: that’s all there is to Git
 
 Whenever you’re typing in any command, think about what manipulation the command is making to the underlying graph data structure. Conversely, if you’re trying to make a particular kind of change to the commit DAG, e.g. “discard uncommitted changes and make the ‘master’ ref point to commit `5d83f9e`”, there’s probably a command to do it (e.g. in this case, `git checkout master; git reset --hard 5d83f9e`).
 
-# Staging area
+## Staging area
 
 This is another concept that’s orthogonal to the data model, but it’s a part of the interface to create commits.
 
@@ -163,11 +165,11 @@ One way you might imagine implementing snapshotting as described above is to hav
 
 Git accommodates such scenarios by allowing you to specify which modifications should be included in the next snapshot through a mechanism called the “staging area”.
 
-# Git command-line interface
+## Git command-line interface
 
 To avoid duplicating information, we’re not going to explain the commands below in detail. See the highly recommended [Pro Git](https://git-scm.com/book/en/v2) for more information, or watch the lecture video.
 
-## Basics
+### Basics
 
 - `git help <command>`: get help for a git command
 - `git init`: creates a new git repo, with data stored in the `.git` directory
@@ -182,7 +184,7 @@ To avoid duplicating information, we’re not going to explain the commands belo
 - `git diff <revision> <filename>`: shows differences in a file between snapshots
 - `git checkout <revision>`: updates HEAD and current branch
 
-## Branching and merging
+### Branching and merging
 
 - `git branch`: shows branches
 - `git branch <name>`: creates a branch
@@ -192,7 +194,7 @@ To avoid duplicating information, we’re not going to explain the commands belo
 - `git mergetool`: use a fancy tool to help resolve merge conflicts
 - `git rebase`: rebase set of patches onto a new base
 
-## Remotes
+### Remotes
 
 - `git remote`: list remotes
 - `git remote add <name> <url>`: add a remote
@@ -202,13 +204,13 @@ To avoid duplicating information, we’re not going to explain the commands belo
 - `git pull`: same as `git fetch; git merge`
 - `git clone`: download repository from remote
 
-## Undo
+### Undo
 
 - `git commit --amend`: edit a commit’s contents/message
 - `git reset HEAD <file>`: unstage a file
 - `git checkout -- <file>`: discard changes
 
-# Advanced Git
+## Advanced Git
 
 - `git config`: Git is [highly customizable](https://git-scm.com/docs/git-config)
 - `git clone --depth=1`: shallow clone, without entire version history
@@ -219,7 +221,7 @@ To avoid duplicating information, we’re not going to explain the commands belo
 - `git bisect`: binary search history (e.g. for regressions)
 - `.gitignore`: [specify](https://git-scm.com/docs/gitignore) intentionally untracked files to ignore
 
-# Miscellaneous
+## Miscellaneous
 
 - **GUIs**: there are many [GUI clients](https://git-scm.com/downloads/guis) out there for Git. We personally don’t use them and use the command-line interface instead.
 - **Shell integration**: it’s super handy to have a Git status as part of your shell prompt ([zsh](https://github.com/olivierverdier/zsh-git-prompt), [bash](https://github.com/magicmonty/bash-git-prompt)). Often included in frameworks like [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh).
@@ -228,7 +230,7 @@ To avoid duplicating information, we’re not going to explain the commands belo
 - **GitHub**: Git is not GitHub. GitHub has a specific way of contributing code to other projects, called [pull requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).
 - **Other Git providers**: GitHub is not special: there are many Git repository hosts, like [GitLab](https://about.gitlab.com/) and [BitBucket](https://bitbucket.org/).
 
-# Resources
+## Resources
 
 - [Pro Git](https://git-scm.com/book/en/v2) is **highly recommended reading**. Going through Chapters 1–5 should teach you most of what you need to use Git proficiently, now that you understand the data model. The later chapters have some interesting, advanced material.
 - [Oh Shit, Git!?!](https://ohshitgit.com/) is a short guide on how to recover from some common Git mistakes.
@@ -237,7 +239,7 @@ To avoid duplicating information, we’re not going to explain the commands belo
 - [How to explain git in simple words](https://smusamashah.github.io/blog/2017/10/14/explain-git-in-simple-words)
 - [Learn Git Branching](https://learngitbranching.js.org/) is a browser-based game that teaches you Git.
 
-# Exercises
+## Exercises
 
 1. If you don’t have any past experience with Git, either try reading the first couple chapters of [Pro Git](https://git-scm.com/book/en/v2) or go through a tutorial like [Learn Git Branching](https://learngitbranching.js.org/). As you’re working through it, relate Git commands to the data model.
 2. Clone the [repository for the class website](https://github.com/missing-semester/missing-semester).
@@ -246,6 +248,6 @@ To avoid duplicating information, we’re not going to explain the commands belo
     3. What was the commit message associated with the last modification to the `collections:` line of `_config.yml`? (Hint: use `git blame` and `git show`).
 3. One common mistake when learning Git is to commit large files that should not be managed by Git or adding sensitive information. Try adding a file to a repository, making some commits and then deleting that file from history (you may want to look at [this](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)).
 4. Clone some repository from GitHub, and modify one of its existing files. What happens when you do `git stash`? What do you see when running `git log --all --oneline`? Run `git stash pop` to undo what you did with `git stash`. In what scenario might this be useful?
-5. Like many command line tools, Git provides a configuration file (or dotfile) called `~/.gitconfig`. Create an alias in `~/.gitconfig` so that when you run `git graph`, you get the output of `git log --all --graph --decorate --oneline`. You can do this by directly [editing](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias) the `~/.gitconfig` file, or you can use the `git config` command to add the alias. Information about git aliases can be found [here](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases).
+5. Like many command line tools, Git provides a configuration file (or dotfile) called `~/.gitconfig`. Create an alias in `~/.gitconfig` so that when you run `git graph`, you get the output of `git log --all --graph --decorate --oneline`. You can do this by directly [editing](https://git-scm.com/docs/git-config##Documentation/git-config.txt-alias) the `~/.gitconfig` file, or you can use the `git config` command to add the alias. Information about git aliases can be found [here](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases).
 6. You can define global ignore patterns in `~/.gitignore_global` after running `git config --global core.excludesfile ~/.gitignore_global`. Do this, and set up your global gitignore file to ignore OS-specific or editor-specific temporary files, like `.DS_Store`.
 7. Fork the [repository for the class website](https://github.com/missing-semester/missing-semester), find a typo or some other improvement you can make, and submit a pull request on GitHub (you may want to look at [this](https://github.com/firstcontributions/first-contributions)). Please only submit PRs that are useful (don’t spam us, please!). If you can’t find an improvement to make, you can skip this exercise.
